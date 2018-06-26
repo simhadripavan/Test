@@ -47,7 +47,7 @@ CREATE TABLE system_database_schema_version (
 );
 
 -- This is used internally.
-INSERT INTO system_database_schema_version VALUES(10, 34);
+INSERT INTO system_database_schema_version VALUES(10, 45);
 
 -- TABLE "system_data"
 -- Stores system wide data common to all tenants

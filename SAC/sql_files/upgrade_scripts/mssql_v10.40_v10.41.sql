@@ -1,3 +1,3 @@
 -- Updating the database schema version
 UPDATE database_schema_version
-SET minor=45;
+SET minor=41;

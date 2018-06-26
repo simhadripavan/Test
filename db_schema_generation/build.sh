@@ -38,6 +38,7 @@ ls -l /bin/bash
 #
 #- TODO: need to make proper updates to said properties file
 
+export SYSTEM_UPGRADE_SUPPORT_PROPERTIES_FILE=system_upgrade_support.properties
 export UPGRADE_SUPPORT_PROPERTIES_FILE=upgrade_support.properties
 export VERSION_FILE=version.txt
 
@@ -122,6 +123,32 @@ update_tracked_versions() {
         echo >> ${UPGRADE_SUPPORT_PROPERTIES_FILE}
     fi
     echo "sql_upgrade_scripts_from_${SCHEMA_VERSION_PREVIOUS}=v${SCHEMA_VERSION_PREVIOUS}_v${SCHEMA_VERSION_CURRENT}" >> ${UPGRADE_SUPPORT_PROPERTIES_FILE}
+	
+	#####################
+	sed -i "s/${PROPERTY_VERSION_SCHEMA_MAJOR}=.*/${PROPERTY_VERSION_SCHEMA_MAJOR}=${SCHEMA_VERSION_CURRENT_MAJOR}/g" ${SYSTEM_UPGRADE_SUPPORT_PROPERTIES_FILE}
+    sed -i "s/${PROPERTY_VERSION_SCHEMA_MINOR}=.*/${PROPERTY_VERSION_SCHEMA_MINOR}=${SCHEMA_VERSION_CURRENT_MINOR}/g" ${SYSTEM_UPGRADE_SUPPORT_PROPERTIES_FILE}
+
+    # update "last_seen_release_version" to current release version
+    sed -i "s/${PROPERTY_VERSION_BUILD_LAST_SEEN}=.*/${PROPERTY_VERSION_BUILD_LAST_SEEN}=${RELEASE_VERSION_CURRENT}/g" ${SYSTEM_UPGRADE_SUPPORT_PROPERTIES_FILE}
+
+    # find "supported_versions=" line
+    # add ",{SCHEMA_VERSION_CURRENT}" to end
+    sed -i "/^supported_versions=/ s/$/,${SCHEMA_VERSION_PREVIOUS}/" ${SYSTEM_UPGRADE_SUPPORT_PROPERTIES_FILE}
+
+    # find "sql_upgrade_scripts_from_*=" lines
+    # add ",{SCHEMA_VERSION_CURRENT}" to end
+    sed -i "/^sql_upgrade_scripts_from.*=/ s/$/, v${SCHEMA_VERSION_PREVIOUS}_v${SCHEMA_VERSION_CURRENT}/" ${SYSTEM_UPGRADE_SUPPORT_PROPERTIES_FILE}
+
+    # add "sql_upgrade_scripts_from_PREVIOUS_VERSION=v{PREVIOUS_VERSIO}_v{CURRENT_VERSION}" line
+    NL=`tail -c 1 ${SYSTEM_UPGRADE_SUPPORT_PROPERTIES_FILE}`
+    if [ "$NL" != "" ]; then
+        echo "No newline found at end of ${SYSTEM_UPGRADE_SUPPORT_PROPERTIES_FILE}";
+        echo "Adding a newline"
+        echo >> ${SYSTEM_UPGRADE_SUPPORT_PROPERTIES_FILE}
+    fi
+    echo "sql_upgrade_scripts_from_${SCHEMA_VERSION_PREVIOUS}=v${SCHEMA_VERSION_PREVIOUS}_v${SCHEMA_VERSION_CURRENT}" >> ${SYSTEM_UPGRADE_SUPPORT_PROPERTIES_FILE}
+	######################
+	
     return 0
 }
 
@@ -155,9 +182,9 @@ modify_new_installation_scripts() {
 	
 	####################  
 	
-    sed -i "s/INSERT INTO database_schema_version VALUES(.*/INSERT INTO database_schema_version VALUES(${SCHEMA_VERSION_CURRENT_MAJOR}\, ${SCHEMA_VERSION_CURRENT_MINOR});/g" ${SQL_FILE_FRESH_BUILD_SYSTEM_MSSQL}
-    sed -i "s/INSERT INTO database_schema_version VALUES(.*/INSERT INTO database_schema_version VALUES(${SCHEMA_VERSION_CURRENT_MAJOR}\, ${SCHEMA_VERSION_CURRENT_MINOR});/g" ${SQL_FILE_FRESH_BUILD_SYSTEM_MYSQL}
-    sed -i "s/INSERT INTO database_schema_version VALUES(.*/INSERT INTO database_schema_version VALUES(${SCHEMA_VERSION_CURRENT_MAJOR}\, ${SCHEMA_VERSION_CURRENT_MINOR});/g" ${SQL_FILE_FRESH_BUILD_SYSTEM_POSTGRES}
+    sed -i "s/INSERT INTO \"system_database_schema_version\" VALUES(.*/INSERT INTO \"system_database_schema_version\" VALUES(${SCHEMA_VERSION_CURRENT_MAJOR}\, ${SCHEMA_VERSION_CURRENT_MINOR});/g" ${SQL_FILE_FRESH_BUILD_SYSTEM_MSSQL}
+    sed -i "s/INSERT INTO \`system_database_schema_version\` VALUES(.*/INSERT INTO \`system_database_schema_version\` VALUES(${SCHEMA_VERSION_CURRENT_MAJOR}\, ${SCHEMA_VERSION_CURRENT_MINOR});/g" ${SQL_FILE_FRESH_BUILD_SYSTEM_MYSQL}
+    sed -i "s/INSERT INTO system_database_schema_version VALUES(.*/INSERT INTO system_database_schema_version VALUES(${SCHEMA_VERSION_CURRENT_MAJOR}\, ${SCHEMA_VERSION_CURRENT_MINOR});/g" ${SQL_FILE_FRESH_BUILD_SYSTEM_POSTGRES}
 	####################
 }
 
