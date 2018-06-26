@@ -38,8 +38,8 @@ ls -l /bin/sh
 #
 #- TODO: need to make proper updates to said properties file
 
-export UPGRADE_SUPPORT_PROPERTIES_FILE=../../CGAdmin/SFTU/src/upgrade_support.properties
-export VERSION_FILE=../versioning/version.txt
+export UPGRADE_SUPPORT_PROPERTIES_FILE=/upgrade_support.properties
+export VERSION_FILE=/version.txt
 
 export PROPERTY_VERSION_SCHEMA_MAJOR="version_schema_major"
 export PROPERTY_VERSION_SCHEMA_MINOR="version_schema_minor"
@@ -52,15 +52,22 @@ SCHEMA_VERSION_CURRENT=${SCHEMA_VERSION_CURRENT_MAJOR}"."${SCHEMA_VERSION_CURREN
 # initialized to be the same as current version
 SCHEMA_VERSION_PREVIOUS=${SCHEMA_VERSION_CURRENT}
 
+
 RELEASE_VERSION_LAST_SEEN=$(grep ${PROPERTY_VERSION_BUILD_LAST_SEEN} ${UPGRADE_SUPPORT_PROPERTIES_FILE}| tr -d "\r\n"| awk -F "=" '{print $2}')
 RELEASE_VERSION_CURRENT=$(grep "XMS_VER" ${VERSION_FILE}| tr -d "\r\n"| awk -F "=" '{print $2}')
+
+###############
+BRANCH_NAME="Release" + ${RELEASE_VERSION_CURRENT}
+echo ${BRANCH_NAME}
+#################
+
 # strip build number out
 RELEASE_VERSION_LAST_SEEN=$(echo ${RELEASE_VERSION_LAST_SEEN}| awk -F "." '{print $1 "." $2 "." $3}')
 RELEASE_VERSION_CURRENT=$(echo ${RELEASE_VERSION_CURRENT}| awk -F "." '{print $1 "." $2 "." $3}')
 
-SQL_FILE_FRESH_BUILD_MSSQL="../../SAC/sql_files/xam/mssql/mam_mssql.sql"
-SQL_FILE_FRESH_BUILD_MYSQL="../../SAC/sql_files/xam/mysql/mam_mysql.sql"
-SQL_FILE_FRESH_BUILD_POSTGRES="../../SAC/sql_files/xam/postgres/mam_postgres.sql"
+SQL_FILE_FRESH_BUILD_MSSQL="../SAC/sql_files/xam/mssql/mam_mssql.sql"
+SQL_FILE_FRESH_BUILD_MYSQL="../SAC/sql_files/xam/mysql/mam_mysql.sql"
+SQL_FILE_FRESH_BUILD_POSTGRES="../SAC/sql_files/xam/postgres/mam_postgres.sql"
 
 check_if_release_version_changed() {
     echo "checking '${RELEASE_VERSION_LAST_SEEN}' == '${RELEASE_VERSION_CURRENT}' ..."
@@ -75,15 +82,15 @@ check_if_release_version_changed() {
 }
 
 update_tracked_versions() {
-    if [[ ${BRANCH_NAME} != "PULL_REQUEST"} ]]; then
-      git config --global user.email "mpgci@citrix.com"
-      git config --global user.name "MPGCI Support"
-      if [[ `git branch | grep ${BRANCH_NAME}` ]]; then
-        # Remove existing branch, to prevent conflicts when getting latest
-        git branch -D ${BRANCH_NAME}
-      fi
-      git checkout -b ${BRANCH_NAME} origin/${BRANCH_NAME}
-    fi
+# if [[ ${BRANCH_NAME} != "PULL_REQUEST"} ]]; then
+   git config --global user.email "simhadri.pavans@gmail.com"
+   git config --global user.name "pavan"
+#   if [[ `git branch | grep ${BRANCH_NAME}` ]]; then
+#     # Remove existing branch, to prevent conflicts when getting latest
+#     git branch -D ${BRANCH_NAME}
+#   fi
+   git checkout -b ${BRANCH_NAME} origin
+# fi
 
     # increment minor schema version
     SCHEMA_VERSION_CURRENT_MINOR=$(echo ${SCHEMA_VERSION_CURRENT_MINOR}| awk '{print $0+1}')
@@ -138,14 +145,14 @@ check_in_changed_files() {
     # this is for local testing.
     # comment out for official build machine. it has proper environment variables already.
     #. ./dot_this.sh
-    SRC_TOP=../..
+    SRC_TOP=..
 
-    if [[ ${BRANCH_NAME} != "PULL_REQUEST"} ]]; then
+#   if [[ ${BRANCH_NAME} != "PULL_REQUEST"} ]]; then
       git add ${UPGRADE_SUPPORT_PROPERTIES_FILE}
       git add ${SQL_FILE_FRESH_BUILD_MSSQL}
       git add ${SQL_FILE_FRESH_BUILD_MYSQL}
       git add ${SQL_FILE_FRESH_BUILD_POSTGRES}
-      git add ../../SAC/sql_files/upgrade_scripts/*v${SCHEMA_VERSION_PREVIOUS}_v${SCHEMA_VERSION_CURRENT}.sql
+      git add ../SAC/sql_files/upgrade_scripts/*v${SCHEMA_VERSION_PREVIOUS}_v${SCHEMA_VERSION_CURRENT}.sql
 
       git commit -m "\
 Schema versioning related update.\
@@ -159,4 +166,4 @@ check_if_release_version_changed
 update_tracked_versions
 generate_new_sql_update_scripts
 modify_new_installation_scripts
-check_in_changed_files
+#check_in_changed_files
