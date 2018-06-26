@@ -55,11 +55,6 @@ SCHEMA_VERSION_PREVIOUS=${SCHEMA_VERSION_CURRENT}
 
 RELEASE_VERSION_LAST_SEEN=$(grep ${PROPERTY_VERSION_BUILD_LAST_SEEN} ${UPGRADE_SUPPORT_PROPERTIES_FILE}| tr -d "\r\n"| awk -F "=" '{print $2}')
 RELEASE_VERSION_CURRENT=$(grep "XMS_VER" ${VERSION_FILE}| tr -d "\r\n"| awk -F "=" '{print $2}')
-#read -p "press enter"
-###############
-BRANCH_NAME="Release" 
-echo ${BRANCH_NAME}
-#################
 
 # strip build number out
 RELEASE_VERSION_LAST_SEEN=$(echo ${RELEASE_VERSION_LAST_SEEN}| awk -F "." '{print $1 "." $2 "." $3}')
@@ -68,6 +63,14 @@ RELEASE_VERSION_CURRENT=$(echo ${RELEASE_VERSION_CURRENT}| awk -F "." '{print $1
 SQL_FILE_FRESH_BUILD_MSSQL="../SAC/sql_files/xam/mssql/mam_mssql.sql"
 SQL_FILE_FRESH_BUILD_MYSQL="../SAC/sql_files/xam/mysql/mam_mysql.sql"
 SQL_FILE_FRESH_BUILD_POSTGRES="../SAC/sql_files/xam/postgres/mam_postgres.sql"
+
+#################
+SQL_FILE_FRESH_BUILD_SYSTEM_MSSQL="../SAC/sql_files/xam/mssql/system_mssql.sql"
+SQL_FILE_FRESH_BUILD_SYSTEM_MYSQL="../SAC/sql_files/xam/mysql/system_mysql.sql"
+SQL_FILE_FRESH_BUILD_SYSTEM_POSTGRES="../SAC/sql_files/xam/postgres/system_postgres.sql"
+##################
+
+
 check_if_release_version_changed() {
 	
     echo "checking '${RELEASE_VERSION_LAST_SEEN}' == '${RELEASE_VERSION_CURRENT}' ..."
@@ -127,15 +130,20 @@ generate_new_sql_update_scripts() {
 	read -p "generate_new_sql_update_scripts"
     # update "minor=" line in template SQL scripts, copy to sql_files directory
 
+	#################
     sed -i "s/minor=.*/minor=${SCHEMA_VERSION_CURRENT_MINOR};/g" template_mssql.sql
     cp template_mssql.sql ../SAC/sql_files/upgrade_scripts/mssql_v${SCHEMA_VERSION_PREVIOUS}_v${SCHEMA_VERSION_CURRENT}.sql
+	cp template_mssql.sql ../SAC/sql_files/upgrade_scripts/mssql/mssql_v${SCHEMA_VERSION_PREVIOUS}_v${SCHEMA_VERSION_CURRENT}.sql
 
     sed -i "s/minor=.*/minor=${SCHEMA_VERSION_CURRENT_MINOR};/g" template_mysql.sql
     cp template_mysql.sql ../SAC/sql_files/upgrade_scripts/mysql_v${SCHEMA_VERSION_PREVIOUS}_v${SCHEMA_VERSION_CURRENT}.sql
+	cp template_mysql.sql ../SAC/sql_files/upgrade_scripts/mysql/mysql_v${SCHEMA_VERSION_PREVIOUS}_v${SCHEMA_VERSION_CURRENT}.sql
 	
     sed -i "s/minor=.*/minor=${SCHEMA_VERSION_CURRENT_MINOR};/g" template_pgsql.sql
     cp template_pgsql.sql ../SAC/sql_files/upgrade_scripts/pgsql_v${SCHEMA_VERSION_PREVIOUS}_v${SCHEMA_VERSION_CURRENT}.sql
-
+	cp template_pgsql.sql ../SAC/sql_files/upgrade_scripts/postgres/pgsql_v${SCHEMA_VERSION_PREVIOUS}_v${SCHEMA_VERSION_CURRENT}.sql
+	#################
+	
     return 0
 }
 
@@ -144,6 +152,13 @@ modify_new_installation_scripts() {
     sed -i "s/INSERT INTO database_schema_version VALUES(.*/INSERT INTO database_schema_version VALUES(${SCHEMA_VERSION_CURRENT_MAJOR}\, ${SCHEMA_VERSION_CURRENT_MINOR});/g" ${SQL_FILE_FRESH_BUILD_MSSQL}
     sed -i "s/INSERT INTO database_schema_version VALUES(.*/INSERT INTO database_schema_version VALUES(${SCHEMA_VERSION_CURRENT_MAJOR}\, ${SCHEMA_VERSION_CURRENT_MINOR});/g" ${SQL_FILE_FRESH_BUILD_MYSQL}
     sed -i "s/INSERT INTO database_schema_version VALUES(.*/INSERT INTO database_schema_version VALUES(${SCHEMA_VERSION_CURRENT_MAJOR}\, ${SCHEMA_VERSION_CURRENT_MINOR});/g" ${SQL_FILE_FRESH_BUILD_POSTGRES}
+	
+	####################  
+	
+    sed -i "s/INSERT INTO database_schema_version VALUES(.*/INSERT INTO database_schema_version VALUES(${SCHEMA_VERSION_CURRENT_MAJOR}\, ${SCHEMA_VERSION_CURRENT_MINOR});/g" ${SQL_FILE_FRESH_BUILD_SYSTEM_MSSQL}
+    sed -i "s/INSERT INTO database_schema_version VALUES(.*/INSERT INTO database_schema_version VALUES(${SCHEMA_VERSION_CURRENT_MAJOR}\, ${SCHEMA_VERSION_CURRENT_MINOR});/g" ${SQL_FILE_FRESH_BUILD_SYSTEM_MYSQL}
+    sed -i "s/INSERT INTO database_schema_version VALUES(.*/INSERT INTO database_schema_version VALUES(${SCHEMA_VERSION_CURRENT_MAJOR}\, ${SCHEMA_VERSION_CURRENT_MINOR});/g" ${SQL_FILE_FRESH_BUILD_SYSTEM_POSTGRES}
+	####################
 }
 
 
