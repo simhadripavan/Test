@@ -38,7 +38,9 @@ ls -l /bin/bash
 #
 #- TODO: need to make proper updates to said properties file
 
+###############
 export SYSTEM_UPGRADE_SUPPORT_PROPERTIES_FILE=system_upgrade_support.properties
+###############
 export UPGRADE_SUPPORT_PROPERTIES_FILE=upgrade_support.properties
 export VERSION_FILE=version.txt
 
@@ -157,18 +159,24 @@ generate_new_sql_update_scripts() {
 	read -p "generate_new_sql_update_scripts"
     # update "minor=" line in template SQL scripts, copy to sql_files directory
 
-	#################
-    sed -i "s/minor=.*/minor=${SCHEMA_VERSION_CURRENT_MINOR};/g" template_mssql.sql
+	sed -i "s/minor=.*/minor=${SCHEMA_VERSION_CURRENT_MINOR};/g" template_mssql.sql
     cp template_mssql.sql ../SAC/sql_files/upgrade_scripts/mssql_v${SCHEMA_VERSION_PREVIOUS}_v${SCHEMA_VERSION_CURRENT}.sql
-	cp template_mssql.sql ../SAC/sql_files/upgrade_scripts/mssql/mssql_v${SCHEMA_VERSION_PREVIOUS}_v${SCHEMA_VERSION_CURRENT}.sql
 
     sed -i "s/minor=.*/minor=${SCHEMA_VERSION_CURRENT_MINOR};/g" template_mysql.sql
     cp template_mysql.sql ../SAC/sql_files/upgrade_scripts/mysql_v${SCHEMA_VERSION_PREVIOUS}_v${SCHEMA_VERSION_CURRENT}.sql
-	cp template_mysql.sql ../SAC/sql_files/upgrade_scripts/mysql/mysql_v${SCHEMA_VERSION_PREVIOUS}_v${SCHEMA_VERSION_CURRENT}.sql
-	
+
     sed -i "s/minor=.*/minor=${SCHEMA_VERSION_CURRENT_MINOR};/g" template_pgsql.sql
     cp template_pgsql.sql ../SAC/sql_files/upgrade_scripts/pgsql_v${SCHEMA_VERSION_PREVIOUS}_v${SCHEMA_VERSION_CURRENT}.sql
-	cp template_pgsql.sql ../SAC/sql_files/upgrade_scripts/postgres/pgsql_v${SCHEMA_VERSION_PREVIOUS}_v${SCHEMA_VERSION_CURRENT}.sql
+	
+	#################
+	sed -i "s/minor=.*/minor=${SCHEMA_VERSION_CURRENT_MINOR};/g" template_system_mssql.sql
+    cp template_system_mssql.sql ../SAC/sql_files/upgrade_scripts/mssql_v${SCHEMA_VERSION_PREVIOUS}_v${SCHEMA_VERSION_CURRENT}.sql
+
+    sed -i "s/minor=.*/minor=${SCHEMA_VERSION_CURRENT_MINOR};/g" template_system_mysql.sql
+    cp template_system_mysql.sql ../SAC/sql_files/upgrade_scripts/mysql_v${SCHEMA_VERSION_PREVIOUS}_v${SCHEMA_VERSION_CURRENT}.sql
+
+    sed -i "s/minor=.*/minor=${SCHEMA_VERSION_CURRENT_MINOR};/g" template_system_pgsql.sql
+    cp template_system_pgsql.sql ../SAC/sql_files/upgrade_scripts/pgsql_v${SCHEMA_VERSION_PREVIOUS}_v${SCHEMA_VERSION_CURRENT}.sql
 	#################
 	
     return 0
@@ -188,7 +196,35 @@ modify_new_installation_scripts() {
 	####################
 }
 
+check_in_changed_files() {
+    # this is for local testing.
+    # comment out for official build machine. it has proper environment variables already.
+    #. ./dot_this.sh
+    SRC_TOP=../..
 
+    if [[ ${BRANCH_NAME} != "PULL_REQUEST"} ]]; then
+#################
+	  git add ${SYSTEM_UPGRADE_SUPPORT_PROPERTIES_FILE}
+#################	
+      git add ${UPGRADE_SUPPORT_PROPERTIES_FILE}
+      git add ${SQL_FILE_FRESH_BUILD_MSSQL}
+      git add ${SQL_FILE_FRESH_BUILD_MYSQL}
+      git add ${SQL_FILE_FRESH_BUILD_POSTGRES}
+
+#################
+	  git add ${SQL_FILE_FRESH_BUILD_SYSTEM_MSSQL}
+      git add ${SQL_FILE_FRESH_BUILD_SYSTEM_MYSQL}
+      git add ${SQL_FILE_FRESH_BUILD_SYSTEM_POSTGRES}
+#################
+      git add ../../SAC/sql_files/upgrade_scripts/*v${SCHEMA_VERSION_PREVIOUS}_v${SCHEMA_VERSION_CURRENT}.sql
+
+      git commit -m "\
+Schema versioning related update.\
+Automated submit by build script."
+      git push origin ${BRANCH_NAME}
+    fi
+    return 0
+}
 
 
 check_if_release_version_changed
