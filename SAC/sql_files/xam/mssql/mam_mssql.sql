@@ -483,7 +483,7 @@ CREATE TABLE system_status (
 GO
 
 -- This is used internally.
-INSERT INTO database_schema_version VALUES(10, 57);
+INSERT INTO database_schema_version VALUES(10, 58);
 GO
 
 -- Stocktake that stored device info and installed apps on the device
