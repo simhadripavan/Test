@@ -77,13 +77,13 @@ check_if_release_version_changed() {
 update_tracked_versions() {
 read -p "update_tracked_versions"
 #    if [[ ${BRANCH_NAME} != "PULL_REQUEST"} ]]; then
-#      git config --global user.email "mpgci@citrix.com"
-#      git config --global user.name "MPGCI Support"
-#      if [[ `git branch | grep ${BRANCH_NAME}` ]]; then
-#        # Remove existing branch, to prevent conflicts when getting latest
-#        git branch -D ${BRANCH_NAME}
-#      fi
-#      git checkout -b ${BRANCH_NAME} origin/${BRANCH_NAME}
+      git config --global user.email "simhadri.pavans@gmail.com"
+      git config --global user.name "Pavan Ofc Lap"
+      if [[ `git branch | grep test2` ]]; then
+        # Remove existing branch, to prevent conflicts when getting latest
+        git branch -D test2
+      fi
+      git checkout -b test2
 #    fi
 
     # increment minor schema version
@@ -118,13 +118,13 @@ generate_new_sql_update_scripts() {
     # update "minor=" line in template SQL scripts, copy to sql_files directory
 read -p "generate_new_sql_update_scripts"
 	sed -i "s/minor=.*/minor=${SCHEMA_VERSION_CURRENT_MINOR};/g" template_system_mssql.sql
-    cp template_system_mssql.sql ../../SAC/sql_files/upgrade_scripts/mssql/mssql_v${SCHEMA_VERSION_PREVIOUS}_v${SCHEMA_VERSION_CURRENT}.sql
+    cp template_system_mssql.sql ../../SAC/sql_files/upgrade_scripts/system_upgrade/mssql/system_mssql_v${SCHEMA_VERSION_PREVIOUS}_v${SCHEMA_VERSION_CURRENT}.sql
 
     sed -i "s/minor=.*/minor=${SCHEMA_VERSION_CURRENT_MINOR};/g" template_system_mysql.sql
-    cp template_system_mysql.sql ../../SAC/sql_files/upgrade_scripts/mysql/mysql_v${SCHEMA_VERSION_PREVIOUS}_v${SCHEMA_VERSION_CURRENT}.sql
+    cp template_system_mysql.sql ../../SAC/sql_files/upgrade_scripts/system_upgrade/mysql/system_mysql_v${SCHEMA_VERSION_PREVIOUS}_v${SCHEMA_VERSION_CURRENT}.sql
 
     sed -i "s/minor=.*/minor=${SCHEMA_VERSION_CURRENT_MINOR};/g" template_system_pgsql.sql
-    cp template_system_pgsql.sql ../../SAC/sql_files/upgrade_scripts/postgres/pgsql_v${SCHEMA_VERSION_PREVIOUS}_v${SCHEMA_VERSION_CURRENT}.sql
+    cp template_system_pgsql.sql ../../SAC/sql_files/upgrade_scripts/system_upgrade/postgres/system_pgsql_v${SCHEMA_VERSION_PREVIOUS}_v${SCHEMA_VERSION_CURRENT}.sql
 
     return 0
 }
@@ -140,20 +140,20 @@ check_in_changed_files() {
     # this is for local testing.
     # comment out for official build machine. it has proper environment variables already.
     #. ./dot_this.sh
-    SRC_TOP=../..
+#    SRC_TOP=../..
 
-    if [[ ${BRANCH_NAME} != "PULL_REQUEST"} ]]; then
+#    if [[ ${BRANCH_NAME} != "PULL_REQUEST"} ]]; then
       git add ${SYSTEM_UPGRADE_SUPPORT_PROPERTIES_FILE}
 	  git add ${SQL_FILE_FRESH_BUILD_SYSTEM_MSSQL}
       git add ${SQL_FILE_FRESH_BUILD_SYSTEM_MYSQL}
       git add ${SQL_FILE_FRESH_BUILD_SYSTEM_POSTGRES}
-      git add ../../SAC/sql_files/upgrade_scripts/*v${SCHEMA_VERSION_PREVIOUS}_v${SCHEMA_VERSION_CURRENT}.sql
+      git add ../../SAC/sql_files/upgrade_scripts/system_upgrade/*/system_*v${SCHEMA_VERSION_PREVIOUS}_v${SCHEMA_VERSION_CURRENT}.sql
 
       git commit -m "\
-Schema versioning related update.\
+Schema versioning related update for systemDB.\
 Automated submit by build script."
-      git push origin ${BRANCH_NAME}
-    fi
+      git push origin test2
+#    fi
     return 0
 }
 
@@ -161,4 +161,4 @@ check_if_release_version_changed
 update_tracked_versions
 generate_new_sql_update_scripts
 modify_new_installation_scripts
-#check_in_changed_files
+check_in_changed_files

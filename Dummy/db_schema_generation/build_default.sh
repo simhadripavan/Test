@@ -63,6 +63,7 @@ SQL_FILE_FRESH_BUILD_MYSQL="../../SAC/sql_files/xam/mysql/mam_mysql.sql"
 SQL_FILE_FRESH_BUILD_POSTGRES="../../SAC/sql_files/xam/postgres/mam_postgres.sql"
 
 check_if_release_version_changed() {
+
     echo "checking '${RELEASE_VERSION_LAST_SEEN}' == '${RELEASE_VERSION_CURRENT}' ..."
     if [ "${RELEASE_VERSION_LAST_SEEN}" == "${RELEASE_VERSION_CURRENT}" ]; then
         # yes. returning out of this function
@@ -80,15 +81,16 @@ check_if_release_version_changed() {
 update_tracked_versions() {
 read -p "update_tracked_versions"
 #    if [[ ${BRANCH_NAME} != "PULL_REQUEST"} ]]; then
-#      git config --global user.email "mpgci@citrix.com"
-#      git config --global user.name "MPGCI Support"
-#      if [[ `git branch | grep ${BRANCH_NAME}` ]]; then
-#        # Remove existing branch, to prevent conflicts when getting latest
-#        git branch -D ${BRANCH_NAME}
-#      fi
-#      git checkout -b ${BRANCH_NAME} origin/${BRANCH_NAME}
+      git config --global user.email "simhadri.pavans@gmail.com"
+      git config --global user.name "Pavan Ofc Lap"
+read -p "Before GIT"
+      if [[ `git branch | grep test1` ]]; then
+        # Remove existing branch, to prevent conflicts when getting latest
+        git branch -D test1
+      fi
+     git checkout -b test1 
 #    fi
-
+read -p "After GIT"
     # increment minor schema version
     SCHEMA_VERSION_CURRENT_MINOR=$(echo ${SCHEMA_VERSION_CURRENT_MINOR}| awk '{print $0+1}')
     sed -i "s/${PROPERTY_VERSION_SCHEMA_MAJOR}=.*/${PROPERTY_VERSION_SCHEMA_MAJOR}=${SCHEMA_VERSION_CURRENT_MAJOR}/g" ${UPGRADE_SUPPORT_PROPERTIES_FILE}
@@ -143,9 +145,9 @@ check_in_changed_files() {
     # this is for local testing.
     # comment out for official build machine. it has proper environment variables already.
     #. ./dot_this.sh
-    SRC_TOP=../..
+#    SRC_TOP=../..
 
-    if [[ ${BRANCH_NAME} != "PULL_REQUEST"} ]]; then
+#    if [[ ${BRANCH_NAME} != "PULL_REQUEST"} ]]; then
       git add ${UPGRADE_SUPPORT_PROPERTIES_FILE}
       git add ${SQL_FILE_FRESH_BUILD_MSSQL}
       git add ${SQL_FILE_FRESH_BUILD_MYSQL}
@@ -155,8 +157,8 @@ check_in_changed_files() {
       git commit -m "\
 Schema versioning related update.\
 Automated submit by build script."
-      git push origin ${BRANCH_NAME}
-    fi
+      git push origin test1
+#    fi
     return 0
 }
 
@@ -164,7 +166,7 @@ check_if_release_version_changed
 update_tracked_versions
 generate_new_sql_update_scripts
 modify_new_installation_scripts
-#check_in_changed_files
+check_in_changed_files
 read -p "This script is about to run build_system."
 sh ./build_system.sh
 read -p "This script has just run build_system."
