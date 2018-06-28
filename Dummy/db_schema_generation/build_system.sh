@@ -45,6 +45,8 @@ export PROPERTY_VERSION_SCHEMA_MAJOR="version_schema_major"
 export PROPERTY_VERSION_SCHEMA_MINOR="version_schema_minor"
 export PROPERTY_VERSION_BUILD_LAST_SEEN="version_build_last_seen"
 
+BRANCH_NAME="MyTest1"
+
 SCHEMA_VERSION_CURRENT_MAJOR=$(grep ${PROPERTY_VERSION_SCHEMA_MAJOR} ${SYSTEM_UPGRADE_SUPPORT_PROPERTIES_FILE}| tr -d "\r\n"| awk -F "=" '{print $2}')
 SCHEMA_VERSION_CURRENT_MINOR=$(grep ${PROPERTY_VERSION_SCHEMA_MINOR} ${SYSTEM_UPGRADE_SUPPORT_PROPERTIES_FILE}| tr -d "\r\n"| awk -F "=" '{print $2}')
 SCHEMA_VERSION_CURRENT=${SCHEMA_VERSION_CURRENT_MAJOR}"."${SCHEMA_VERSION_CURRENT_MINOR}
@@ -76,15 +78,19 @@ check_if_release_version_changed() {
 
 update_tracked_versions() {
 read -p "update_tracked_versions"
-#    if [[ ${BRANCH_NAME} != "PULL_REQUEST"} ]]; then
+    if [[ ${BRANCH_NAME} != "PULL_REQUEST"} ]]; then
       git config --global user.email "simhadri.pavans@gmail.com"
       git config --global user.name "Pavan Ofc Lap"
-      if [[ `git branch | grep test2` ]]; then
+	  read -p "Before GIT"
+      if [[ `git branch | grep ${BRANCH_NAME}` ]]; then
         # Remove existing branch, to prevent conflicts when getting latest
-        git branch -D test2
+		read -p "Before deletion"
+		git checkout master
+        git branch -D ${BRANCH_NAME}
       fi
-      git checkout -b test2
-#    fi
+      git checkout -b ${BRANCH_NAME}
+	  read -p "After GIT"
+    fi
 
     # increment minor schema version
     SCHEMA_VERSION_CURRENT_MINOR=$(echo ${SCHEMA_VERSION_CURRENT_MINOR}| awk '{print $0+1}')
@@ -142,7 +148,7 @@ check_in_changed_files() {
     #. ./dot_this.sh
 #    SRC_TOP=../..
 
-#    if [[ ${BRANCH_NAME} != "PULL_REQUEST"} ]]; then
+    if [[ ${BRANCH_NAME} != "PULL_REQUEST"} ]]; then
       git add ${SYSTEM_UPGRADE_SUPPORT_PROPERTIES_FILE}
 	  git add ${SQL_FILE_FRESH_BUILD_SYSTEM_MSSQL}
       git add ${SQL_FILE_FRESH_BUILD_SYSTEM_MYSQL}
@@ -152,8 +158,8 @@ check_in_changed_files() {
       git commit -m "\
 Schema versioning related update for systemDB.\
 Automated submit by build script."
-      git push origin test2
-#    fi
+      git push origin ${BRANCH_NAME}
+    fi
     return 0
 }
 
