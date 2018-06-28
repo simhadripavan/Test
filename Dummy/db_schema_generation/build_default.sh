@@ -46,7 +46,7 @@ export PROPERTY_VERSION_SCHEMA_MAJOR="version_schema_major"
 export PROPERTY_VERSION_SCHEMA_MINOR="version_schema_minor"
 export PROPERTY_VERSION_BUILD_LAST_SEEN="version_build_last_seen"
 
-BRANCH_NAME="MyTest1"
+BRANCH_NAME="DummyBuild"
 
 SCHEMA_VERSION_CURRENT_MAJOR=$(grep ${PROPERTY_VERSION_SCHEMA_MAJOR} ${UPGRADE_SUPPORT_PROPERTIES_FILE}| tr -d "\r\n"| awk -F "=" '{print $2}')
 SCHEMA_VERSION_CURRENT_MINOR=$(grep ${PROPERTY_VERSION_SCHEMA_MINOR} ${UPGRADE_SUPPORT_PROPERTIES_FILE}| tr -d "\r\n"| awk -F "=" '{print $2}')
