@@ -48,6 +48,11 @@ export PROPERTY_VERSION_SCHEMA_MAJOR="version_schema_major"
 export PROPERTY_VERSION_SCHEMA_MINOR="version_schema_minor"
 export PROPERTY_VERSION_BUILD_LAST_SEEN="version_build_last_seen"
 
+#############
+BRANCH_NAME="AllInOneTestFinal"
+##############
+
+
 SCHEMA_VERSION_CURRENT_MAJOR=$(grep ${PROPERTY_VERSION_SCHEMA_MAJOR} ${UPGRADE_SUPPORT_PROPERTIES_FILE}| tr -d "\r\n"| awk -F "=" '{print $2}')
 SCHEMA_VERSION_CURRENT_MINOR=$(grep ${PROPERTY_VERSION_SCHEMA_MINOR} ${UPGRADE_SUPPORT_PROPERTIES_FILE}| tr -d "\r\n"| awk -F "=" '{print $2}')
 SCHEMA_VERSION_CURRENT=${SCHEMA_VERSION_CURRENT_MAJOR}"."${SCHEMA_VERSION_CURRENT_MINOR}
@@ -63,14 +68,14 @@ RELEASE_VERSION_CURRENT=$(grep "XMS_VER" ${VERSION_FILE}| tr -d "\r\n"| awk -F "
 RELEASE_VERSION_LAST_SEEN=$(echo ${RELEASE_VERSION_LAST_SEEN}| awk -F "." '{print $1 "." $2 "." $3}')
 RELEASE_VERSION_CURRENT=$(echo ${RELEASE_VERSION_CURRENT}| awk -F "." '{print $1 "." $2 "." $3}')
 
-SQL_FILE_FRESH_BUILD_MSSQL="../SAC/sql_files/xam/mssql/mam_mssql.sql"
-SQL_FILE_FRESH_BUILD_MYSQL="../SAC/sql_files/xam/mysql/mam_mysql.sql"
-SQL_FILE_FRESH_BUILD_POSTGRES="../SAC/sql_files/xam/postgres/mam_postgres.sql"
+SQL_FILE_FRESH_BUILD_MSSQL="../../SAC/sql_files/xam/mssql/mam_mssql.sql"
+SQL_FILE_FRESH_BUILD_MYSQL="../../SAC/sql_files/xam/mysql/mam_mysql.sql"
+SQL_FILE_FRESH_BUILD_POSTGRES="../../SAC/sql_files/xam/postgres/mam_postgres.sql"
 
 #################
-SQL_FILE_FRESH_BUILD_SYSTEM_MSSQL="../SAC/sql_files/xam/mssql/system_mssql.sql"
-SQL_FILE_FRESH_BUILD_SYSTEM_MYSQL="../SAC/sql_files/xam/mysql/system_mysql.sql"
-SQL_FILE_FRESH_BUILD_SYSTEM_POSTGRES="../SAC/sql_files/xam/postgres/system_postgres.sql"
+SQL_FILE_FRESH_BUILD_SYSTEM_MSSQL="../../SAC/sql_files/xam/mssql/system_mssql.sql"
+SQL_FILE_FRESH_BUILD_SYSTEM_MYSQL="../../SAC/sql_files/xam/mysql/system_mysql.sql"
+SQL_FILE_FRESH_BUILD_SYSTEM_POSTGRES="../../SAC/sql_files/xam/postgres/system_postgres.sql"
 ##################
 
 
@@ -90,15 +95,15 @@ check_if_release_version_changed() {
 
 update_tracked_versions() {
 	read -p "update_tracked_versions"
-# if [[ ${BRANCH_NAME} != "PULL_REQUEST"} ]]; then
-#   git config --global user.email "simhadri.pavans@gmail.com"
-#   git config --global user.name "pavan"
-#   if [[ `git branch | grep ${BRANCH_NAME}` ]]; then
-#     # Remove existing branch, to prevent conflicts when getting latest
-#     git branch -D ${BRANCH_NAME}
-#   fi
-#   git checkout -b ${BRANCH_NAME} origin
-# fi
+ if [[ ${BRANCH_NAME} != "PULL_REQUEST"} ]]; then
+#	read -p "before git"
+   if [[ `git branch | grep ${BRANCH_NAME}` ]]; then
+     # Remove existing branch, to prevent conflicts when getting latest
+     git branch -D ${BRANCH_NAME}
+   fi
+ #  read -p "after git"
+   git checkout -b ${BRANCH_NAME} 
+ fi
 
     # increment minor schema version
     SCHEMA_VERSION_CURRENT_MINOR=$(echo ${SCHEMA_VERSION_CURRENT_MINOR}| awk '{print $0+1}')
@@ -129,6 +134,7 @@ update_tracked_versions() {
 	#####################
 	sed -i "s/${PROPERTY_VERSION_SCHEMA_MAJOR}=.*/${PROPERTY_VERSION_SCHEMA_MAJOR}=${SCHEMA_VERSION_CURRENT_MAJOR}/g" ${SYSTEM_UPGRADE_SUPPORT_PROPERTIES_FILE}
     sed -i "s/${PROPERTY_VERSION_SCHEMA_MINOR}=.*/${PROPERTY_VERSION_SCHEMA_MINOR}=${SCHEMA_VERSION_CURRENT_MINOR}/g" ${SYSTEM_UPGRADE_SUPPORT_PROPERTIES_FILE}
+	SCHEMA_VERSION_CURRENT=${SCHEMA_VERSION_CURRENT_MAJOR}"."${SCHEMA_VERSION_CURRENT_MINOR}
 
     # update "last_seen_release_version" to current release version
     sed -i "s/${PROPERTY_VERSION_BUILD_LAST_SEEN}=.*/${PROPERTY_VERSION_BUILD_LAST_SEEN}=${RELEASE_VERSION_CURRENT}/g" ${SYSTEM_UPGRADE_SUPPORT_PROPERTIES_FILE}
@@ -160,23 +166,23 @@ generate_new_sql_update_scripts() {
     # update "minor=" line in template SQL scripts, copy to sql_files directory
 
 	sed -i "s/minor=.*/minor=${SCHEMA_VERSION_CURRENT_MINOR};/g" template_mssql.sql
-    cp template_mssql.sql ../SAC/sql_files/upgrade_scripts/mssql_v${SCHEMA_VERSION_PREVIOUS}_v${SCHEMA_VERSION_CURRENT}.sql
-
+    cp template_mssql.sql ../../SAC/sql_files/upgrade_scripts/mssql_v${SCHEMA_VERSION_PREVIOUS}_v${SCHEMA_VERSION_CURRENT}.sql
+	
     sed -i "s/minor=.*/minor=${SCHEMA_VERSION_CURRENT_MINOR};/g" template_mysql.sql
-    cp template_mysql.sql ../SAC/sql_files/upgrade_scripts/mysql_v${SCHEMA_VERSION_PREVIOUS}_v${SCHEMA_VERSION_CURRENT}.sql
+    cp template_mysql.sql ../../SAC/sql_files/upgrade_scripts/mysql_v${SCHEMA_VERSION_PREVIOUS}_v${SCHEMA_VERSION_CURRENT}.sql
 
     sed -i "s/minor=.*/minor=${SCHEMA_VERSION_CURRENT_MINOR};/g" template_pgsql.sql
-    cp template_pgsql.sql ../SAC/sql_files/upgrade_scripts/pgsql_v${SCHEMA_VERSION_PREVIOUS}_v${SCHEMA_VERSION_CURRENT}.sql
+    cp template_pgsql.sql ../../SAC/sql_files/upgrade_scripts/pgsql_v${SCHEMA_VERSION_PREVIOUS}_v${SCHEMA_VERSION_CURRENT}.sql
 	
 	#################
 	sed -i "s/minor=.*/minor=${SCHEMA_VERSION_CURRENT_MINOR};/g" template_system_mssql.sql
-    cp template_system_mssql.sql ../SAC/sql_files/upgrade_scripts/mssql_v${SCHEMA_VERSION_PREVIOUS}_v${SCHEMA_VERSION_CURRENT}.sql
+    cp template_system_mssql.sql ../../SAC/sql_files/upgrade_scripts/system_upgrade/mssql/system_mssql_v${SCHEMA_VERSION_PREVIOUS}_v${SCHEMA_VERSION_CURRENT}.sql
 
     sed -i "s/minor=.*/minor=${SCHEMA_VERSION_CURRENT_MINOR};/g" template_system_mysql.sql
-    cp template_system_mysql.sql ../SAC/sql_files/upgrade_scripts/mysql_v${SCHEMA_VERSION_PREVIOUS}_v${SCHEMA_VERSION_CURRENT}.sql
+    cp template_system_mysql.sql ../../SAC/sql_files/upgrade_scripts/system_upgrade/mysql/system_mysql_v${SCHEMA_VERSION_PREVIOUS}_v${SCHEMA_VERSION_CURRENT}.sql
 
     sed -i "s/minor=.*/minor=${SCHEMA_VERSION_CURRENT_MINOR};/g" template_system_pgsql.sql
-    cp template_system_pgsql.sql ../SAC/sql_files/upgrade_scripts/pgsql_v${SCHEMA_VERSION_PREVIOUS}_v${SCHEMA_VERSION_CURRENT}.sql
+    cp template_system_pgsql.sql ../../SAC/sql_files/upgrade_scripts/system_upgrade/postgres/system_pgsql_v${SCHEMA_VERSION_PREVIOUS}_v${SCHEMA_VERSION_CURRENT}.sql
 	#################
 	
     return 0
@@ -215,6 +221,8 @@ check_in_changed_files() {
 	  git add ${SQL_FILE_FRESH_BUILD_SYSTEM_MSSQL}
       git add ${SQL_FILE_FRESH_BUILD_SYSTEM_MYSQL}
       git add ${SQL_FILE_FRESH_BUILD_SYSTEM_POSTGRES}
+	  
+	  git add ../../SAC/sql_files/upgrade_scripts/system_upgrade/*/system_*v${SCHEMA_VERSION_PREVIOUS}_v${SCHEMA_VERSION_CURRENT}.sql
 #################
       git add ../../SAC/sql_files/upgrade_scripts/*v${SCHEMA_VERSION_PREVIOUS}_v${SCHEMA_VERSION_CURRENT}.sql
 
@@ -231,4 +239,4 @@ check_if_release_version_changed
 update_tracked_versions
 generate_new_sql_update_scripts
 modify_new_installation_scripts
-#check_in_changed_files
+check_in_changed_files
