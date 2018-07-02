@@ -44,7 +44,7 @@ CREATE TABLE `system_database_schema_version` (
 
 
 -- This is used internally.
-INSERT INTO `system_database_schema_version` VALUES(10, 60);
+INSERT INTO `system_database_schema_version` VALUES(10, 61);
 
 CREATE TABLE `system_data` (
 	`cluster_id` VARCHAR(64) NOT NULL,
