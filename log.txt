@@ -1,0 +1,115 @@
+On branch SeperateTest4
+Changes not staged for commit:
+  (use "git add/rm <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+	modified:   Dummy/db_schema_generation/build_default.sh
+	modified:   Dummy/db_schema_generation/build_system.sh
+	modified:   Dummy/db_schema_generation/template_mssql.sql
+	modified:   Dummy/db_schema_generation/template_mysql.sql
+	modified:   Dummy/db_schema_generation/template_pgsql.sql
+	modified:   Dummy/db_schema_generation/template_system_mssql.sql
+	modified:   Dummy/db_schema_generation/template_system_mysql.sql
+	modified:   Dummy/db_schema_generation/template_system_pgsql.sql
+	modified:   Dummy/db_schema_generation/version.txt
+	modified:   SAC/sql_files/XAM/mssql/mam_mssql.sql
+	modified:   SAC/sql_files/XAM/mssql/system_mssql.sql
+	modified:   SAC/sql_files/XAM/mysql/mam_mysql.sql
+	modified:   SAC/sql_files/XAM/mysql/system_mysql.sql
+	modified:   SAC/sql_files/XAM/postgres/mam_postgres.sql
+	modified:   SAC/sql_files/XAM/postgres/system_postgres.sql
+	deleted:    SAC/sql_files/upgrade_scripts/mssql_v10.36_v10.37.sql
+	deleted:    SAC/sql_files/upgrade_scripts/mssql_v10.37_v10.38.sql
+	deleted:    SAC/sql_files/upgrade_scripts/mssql_v10.38_v10.39.sql
+	deleted:    SAC/sql_files/upgrade_scripts/mssql_v10.39_v10.40.sql
+	deleted:    SAC/sql_files/upgrade_scripts/mssql_v10.40_v10.41.sql
+	deleted:    SAC/sql_files/upgrade_scripts/mssql_v10.41_v10.42.sql
+	deleted:    SAC/sql_files/upgrade_scripts/mssql_v10.44_v10.45.sql
+	deleted:    SAC/sql_files/upgrade_scripts/mssql_v10.48_v10.49.sql
+	deleted:    SAC/sql_files/upgrade_scripts/mssql_v10.49_v10.50.sql
+	deleted:    SAC/sql_files/upgrade_scripts/mssql_v10.50_v10.51.sql
+	deleted:    SAC/sql_files/upgrade_scripts/mssql_v10.51_v10.52.sql
+	deleted:    SAC/sql_files/upgrade_scripts/mssql_v10.52_v10.53.sql
+	deleted:    SAC/sql_files/upgrade_scripts/mssql_v10.53_v10.54.sql
+	deleted:    SAC/sql_files/upgrade_scripts/mssql_v10.54_v10.55.sql
+	deleted:    SAC/sql_files/upgrade_scripts/mssql_v10.55_v10.56.sql
+	deleted:    SAC/sql_files/upgrade_scripts/mssql_v10.56_v10.57.sql
+	deleted:    SAC/sql_files/upgrade_scripts/mssql_v10.57_v10.58.sql
+	deleted:    SAC/sql_files/upgrade_scripts/mysql_v10.36_v10.37.sql
+	deleted:    SAC/sql_files/upgrade_scripts/mysql_v10.37_v10.38.sql
+	deleted:    SAC/sql_files/upgrade_scripts/mysql_v10.38_v10.39.sql
+	deleted:    SAC/sql_files/upgrade_scripts/mysql_v10.39_v10.40.sql
+	deleted:    SAC/sql_files/upgrade_scripts/mysql_v10.40_v10.41.sql
+	deleted:    SAC/sql_files/upgrade_scripts/mysql_v10.41_v10.42.sql
+	deleted:    SAC/sql_files/upgrade_scripts/mysql_v10.44_v10.45.sql
+	deleted:    SAC/sql_files/upgrade_scripts/mysql_v10.48_v10.49.sql
+	deleted:    SAC/sql_files/upgrade_scripts/mysql_v10.49_v10.50.sql
+	deleted:    SAC/sql_files/upgrade_scripts/mysql_v10.50_v10.51.sql
+	deleted:    SAC/sql_files/upgrade_scripts/mysql_v10.51_v10.52.sql
+	deleted:    SAC/sql_files/upgrade_scripts/mysql_v10.52_v10.53.sql
+	deleted:    SAC/sql_files/upgrade_scripts/mysql_v10.53_v10.54.sql
+	deleted:    SAC/sql_files/upgrade_scripts/mysql_v10.54_v10.55.sql
+	deleted:    SAC/sql_files/upgrade_scripts/mysql_v10.55_v10.56.sql
+	deleted:    SAC/sql_files/upgrade_scripts/mysql_v10.56_v10.57.sql
+	deleted:    SAC/sql_files/upgrade_scripts/mysql_v10.57_v10.58.sql
+	deleted:    SAC/sql_files/upgrade_scripts/pgsql_v10.36_v10.37.sql
+	deleted:    SAC/sql_files/upgrade_scripts/pgsql_v10.37_v10.38.sql
+	deleted:    SAC/sql_files/upgrade_scripts/pgsql_v10.38_v10.39.sql
+	deleted:    SAC/sql_files/upgrade_scripts/pgsql_v10.39_v10.40.sql
+	deleted:    SAC/sql_files/upgrade_scripts/pgsql_v10.40_v10.41.sql
+	deleted:    SAC/sql_files/upgrade_scripts/pgsql_v10.41_v10.42.sql
+	deleted:    SAC/sql_files/upgrade_scripts/pgsql_v10.44_v10.45.sql
+	deleted:    SAC/sql_files/upgrade_scripts/pgsql_v10.48_v10.49.sql
+	deleted:    SAC/sql_files/upgrade_scripts/pgsql_v10.49_v10.50.sql
+	deleted:    SAC/sql_files/upgrade_scripts/pgsql_v10.50_v10.51.sql
+	deleted:    SAC/sql_files/upgrade_scripts/pgsql_v10.51_v10.52.sql
+	deleted:    SAC/sql_files/upgrade_scripts/pgsql_v10.52_v10.53.sql
+	deleted:    SAC/sql_files/upgrade_scripts/pgsql_v10.53_v10.54.sql
+	deleted:    SAC/sql_files/upgrade_scripts/pgsql_v10.54_v10.55.sql
+	deleted:    SAC/sql_files/upgrade_scripts/pgsql_v10.55_v10.56.sql
+	deleted:    SAC/sql_files/upgrade_scripts/pgsql_v10.56_v10.57.sql
+	deleted:    SAC/sql_files/upgrade_scripts/pgsql_v10.57_v10.58.sql
+	deleted:    SAC/sql_files/upgrade_scripts/system_upgrade/mssql/mssql_v10.38_v10.39.sql
+	deleted:    SAC/sql_files/upgrade_scripts/system_upgrade/mssql/mssql_v10.39_v10.40.sql
+	deleted:    SAC/sql_files/upgrade_scripts/system_upgrade/mssql/mssql_v10.40_v10.41.sql
+	deleted:    SAC/sql_files/upgrade_scripts/system_upgrade/mssql/mssql_v10.41_v10.42.sql
+	deleted:    SAC/sql_files/upgrade_scripts/system_upgrade/mssql/mssql_v10.44_v10.45.sql
+	deleted:    SAC/sql_files/upgrade_scripts/system_upgrade/mssql/mssql_v10.51_v10.52.sql
+	deleted:    SAC/sql_files/upgrade_scripts/system_upgrade/mssql/mssql_v10.52_v10.53.sql
+	deleted:    SAC/sql_files/upgrade_scripts/system_upgrade/mssql/mssql_v10.53_v10.54.sql
+	deleted:    SAC/sql_files/upgrade_scripts/system_upgrade/mssql/mssql_v10.54_v10.55.sql
+	deleted:    SAC/sql_files/upgrade_scripts/system_upgrade/mssql/system_mssql_v10.55_v10.56.sql
+	deleted:    SAC/sql_files/upgrade_scripts/system_upgrade/mssql/system_mssql_v10.56_v10.57.sql
+	deleted:    SAC/sql_files/upgrade_scripts/system_upgrade/mssql/system_mssql_v10.57_v10.58.sql
+	deleted:    SAC/sql_files/upgrade_scripts/system_upgrade/mysql/mysql_v10.38_v10.39.sql
+	deleted:    SAC/sql_files/upgrade_scripts/system_upgrade/mysql/mysql_v10.39_v10.40.sql
+	deleted:    SAC/sql_files/upgrade_scripts/system_upgrade/mysql/mysql_v10.40_v10.41.sql
+	deleted:    SAC/sql_files/upgrade_scripts/system_upgrade/mysql/mysql_v10.41_v10.42.sql
+	deleted:    SAC/sql_files/upgrade_scripts/system_upgrade/mysql/mysql_v10.44_v10.45.sql
+	deleted:    SAC/sql_files/upgrade_scripts/system_upgrade/mysql/mysql_v10.51_v10.52.sql
+	deleted:    SAC/sql_files/upgrade_scripts/system_upgrade/mysql/mysql_v10.52_v10.53.sql
+	deleted:    SAC/sql_files/upgrade_scripts/system_upgrade/mysql/mysql_v10.53_v10.54.sql
+	deleted:    SAC/sql_files/upgrade_scripts/system_upgrade/mysql/mysql_v10.54_v10.55.sql
+	deleted:    SAC/sql_files/upgrade_scripts/system_upgrade/mysql/system_mysql_v10.55_v10.56.sql
+	deleted:    SAC/sql_files/upgrade_scripts/system_upgrade/mysql/system_mysql_v10.56_v10.57.sql
+	deleted:    SAC/sql_files/upgrade_scripts/system_upgrade/mysql/system_mysql_v10.57_v10.58.sql
+	deleted:    SAC/sql_files/upgrade_scripts/system_upgrade/postgres/pgsql_v10.38_v10.39.sql
+	deleted:    SAC/sql_files/upgrade_scripts/system_upgrade/postgres/pgsql_v10.39_v10.40.sql
+	deleted:    SAC/sql_files/upgrade_scripts/system_upgrade/postgres/pgsql_v10.40_v10.41.sql
+	deleted:    SAC/sql_files/upgrade_scripts/system_upgrade/postgres/pgsql_v10.41_v10.42.sql
+	deleted:    SAC/sql_files/upgrade_scripts/system_upgrade/postgres/pgsql_v10.44_v10.45.sql
+	deleted:    SAC/sql_files/upgrade_scripts/system_upgrade/postgres/pgsql_v10.51_v10.52.sql
+	deleted:    SAC/sql_files/upgrade_scripts/system_upgrade/postgres/pgsql_v10.52_v10.53.sql
+	deleted:    SAC/sql_files/upgrade_scripts/system_upgrade/postgres/pgsql_v10.53_v10.54.sql
+	deleted:    SAC/sql_files/upgrade_scripts/system_upgrade/postgres/pgsql_v10.54_v10.55.sql
+	deleted:    SAC/sql_files/upgrade_scripts/system_upgrade/postgres/system_pgsql_v10.55_v10.56.sql
+	deleted:    SAC/sql_files/upgrade_scripts/system_upgrade/postgres/system_pgsql_v10.56_v10.57.sql
+	deleted:    SAC/sql_files/upgrade_scripts/system_upgrade/postgres/system_pgsql_v10.57_v10.58.sql
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+	Dummy/db_schema_generation/test.txt
+	log.txt
+
+no changes added to commit (use "git add" and/or "git commit -a")
