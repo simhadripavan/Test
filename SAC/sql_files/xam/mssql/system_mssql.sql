@@ -47,7 +47,7 @@ GO
 
 
 -- This is used internally.
-INSERT INTO "system_database_schema_version" VALUES(10, 63);
+INSERT INTO "system_database_schema_version" VALUES(10, 64);
 GO
 
 -- TABLE "system_data"
