@@ -478,7 +478,7 @@ CREATE TABLE system_status (
 );
 
 -- This is used internally.
-INSERT INTO database_schema_version VALUES(10, 67);
+INSERT INTO database_schema_version VALUES(10, 68);
 
 ---Stocktake that stored device info and installed apps on the device
 CREATE TABLE store_stocktake
